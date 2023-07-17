@@ -10,10 +10,13 @@ function App() {
   const [intelligence, setIntelligence] = useState(0);
   const [wisdom, setWisdom] = useState(0);
   const [charisma, setCharisma] = useState(0);
-  const [showAttrStat, setShowAttrStat] = useState(false);
+  const [requirement, setRequirement] = useState(false);
+  const [classStat, setClassStat] = useState({});
 
-  const handleShowStat = (e, name) => {
-    e.preventdefault();
+  const showRequiredStat = (name) => {
+    setRequirement(true);
+    setClassStat(CLASS_LIST[name]);
+    return CLASS_LIST[name];
   };
 
   return (
@@ -78,16 +81,33 @@ function App() {
           </div>
           <div id="item2">
             <h2>Classes</h2>
-            {Object.keys(CLASS_LIST).map((e, i) => {
+            {Object.keys(CLASS_LIST).map((cl, i) => {
               return (
-                <span key={i}>
-                  {e}
+                <span key={i} onClick={() => showRequiredStat(cl)}>
+                  {cl}
                   <br />
                 </span>
               );
             })}
           </div>
-          {showAttrStat && <div id="item3"></div>}
+          {requirement && (
+            <div id="item3">
+              <h2>Minimum required statistics</h2>
+              {Object.keys(classStat).map((cl, i) => {
+                return (
+                  <span key={i}>
+                    {cl}: {classStat[cl]}
+                    <br />
+                  </span>
+                );
+              })}
+              <div className="requirement_view">
+                <button onClick={() => setRequirement(false)}>
+                  Close Requirement View
+                </button>
+              </div>
+            </div>
+          )}
           <div id="item4"></div>
         </div>
       </section>
