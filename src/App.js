@@ -17,7 +17,7 @@ function App() {
   const [classStat, setClassStat] = useState({});
 
   const [attributes, setAttributes] = useState(defaultValues);
-  const [modifiers, setModifiers] = useState(defaultValues);
+  const [modifiers, setModifiers] = useState({});
 
   const handleAttributes = (attrName, direction) => {
     switch (attrName) {
@@ -27,17 +27,7 @@ function App() {
             ? attributes["strength"] + 1
             : attributes["strength"] - 1;
         setAttributes({ ...attributes, strength: value });
-        console.log("attributes[strength]: ", value);
-        if (value > 10) {
-          const over = value - 10;
-          const point = over % 2 == 0 ? over / 2 : 0;
-          console.log("got here");
-          console.log(point);
-          setModifiers({ ...modifiers, strenght: point });
-
-          console.log("modifier inside", modifiers);
-        }
-        console.log("modifier", modifiers);
+        setModifiers({ ...modifiers, strenght: getPoints(value) });
         break;
       case "dexterity":
         const dexterity =
@@ -48,6 +38,7 @@ function App() {
           ...attributes,
           dexterity: dexterity,
         });
+        setModifiers({ ...modifiers, dexterity: getPoints(dexterity) });
         break;
       case "constitution":
         const newConstitution =
@@ -58,6 +49,10 @@ function App() {
           ...attributes,
           constitution: newConstitution,
         });
+        setModifiers({
+          ...modifiers,
+          constitution: getPoints(newConstitution),
+        });
         break;
       case "intelligence":
         const newIntelligence =
@@ -66,7 +61,11 @@ function App() {
             : attributes["intelligence"] - 1;
         setAttributes({
           ...attributes,
-          intelligence: newConstitution,
+          intelligence: newIntelligence,
+        });
+        setModifiers({
+          ...modifiers,
+          intelligence: getPoints(newIntelligence),
         });
         break;
       case "wisdom":
@@ -75,6 +74,7 @@ function App() {
             ? attributes["wisdom"] + 1
             : attributes["wisdom"] - 1;
         setAttributes({ ...attributes, wisdom: newWisdom });
+        setModifiers({ ...modifiers, wisdom: getPoints(newWisdom) });
         break;
       case "charisma":
         const newCharisma =
@@ -82,6 +82,7 @@ function App() {
             ? attributes["charisma"] + 1
             : attributes["charisma"] - 1;
         setAttributes({ ...attributes, charisma: newCharisma });
+        setModifiers({ ...modifiers, charisma: getPoints(newCharisma) });
         break;
 
       default:
@@ -93,6 +94,21 @@ function App() {
     setRequirement(true);
     setClassStat(CLASS_LIST[name]);
     return CLASS_LIST[name];
+  };
+
+  const getPoints = (value) => {
+    let point;
+    if (value >= 10) {
+      const over = value - 10;
+      point = Math.round(over / 2);
+      return point;
+    }
+
+    if (value < 10) {
+      const over = 10 - value;
+      const point = Math.round(over / 2);
+      return -point;
+    }
   };
 
   return (
@@ -111,7 +127,7 @@ function App() {
           <div id="item1">
             <h2>Attributes</h2>
             <div>
-              Strength: {attributes.strength}(Modifier: {modifiers["strength"]})
+              Strength: {attributes.strength} (Modifier: {modifiers.strenght})
               <button onClick={() => handleAttributes("strength", "up")}>
                 +
               </button>
@@ -120,7 +136,8 @@ function App() {
               </button>
             </div>
             <div>
-              Dexterity: {attributes.dexterity}
+              Dexterity: {attributes.dexterity} (Modifier: {modifiers.dexterity}
+              )
               <button onClick={() => handleAttributes("dexterity", "up")}>
                 +
               </button>
@@ -129,7 +146,8 @@ function App() {
               </button>
             </div>
             <div>
-              Constitution: {attributes.constitution}
+              Constitution: {attributes.constitution} (Modifier:{" "}
+              {modifiers.constitution})
               <button onClick={() => handleAttributes("constitution", "up")}>
                 +
               </button>
@@ -138,7 +156,8 @@ function App() {
               </button>
             </div>
             <div>
-              Intelligence: {attributes.intelligence}
+              Intelligence: {attributes.intelligence} (Modifier:{" "}
+              {modifiers.intelligence})
               <button onClick={() => handleAttributes("intelligence", "up")}>
                 +
               </button>
@@ -147,7 +166,7 @@ function App() {
               </button>
             </div>
             <div>
-              Wisdom: {attributes.wisdom}
+              Wisdom: {attributes.wisdom} (Modifier: {modifiers.wisdom})
               <button onClick={() => handleAttributes("wisdom", "up")}>
                 +
               </button>
@@ -156,7 +175,7 @@ function App() {
               </button>
             </div>
             <div>
-              Charisma: {attributes.charisma}
+              Charisma: {attributes.charisma} (Modifier: {modifiers.charisma})
               <button onClick={() => handleAttributes("charisma", "up")}>
                 +
               </button>
@@ -194,7 +213,9 @@ function App() {
               </div>
             </div>
           )}
-          <div id="item4"></div>
+          <div id="item4">
+            <h2>Skills</h2>
+          </div>
         </div>
       </section>
     </div>
