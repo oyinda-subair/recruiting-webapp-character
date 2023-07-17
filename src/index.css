@@ -31,11 +31,14 @@ code {
 }
 
 #item3 {
-  background-color: blue;
   grid-column: auto;
 }
 
 #item4 {
   background-color: pink;
   grid-column: auto;
+}
+
+.requirement_view {
+  padding-top: 10px;
 }
