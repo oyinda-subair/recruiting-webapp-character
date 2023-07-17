@@ -19,74 +19,69 @@ function App() {
   const [attributes, setAttributes] = useState(defaultValues);
   const [modifiers, setModifiers] = useState(defaultValues);
 
-  const handleAttributes = (attrName) => {
+  const handleAttributes = (attrName, direction) => {
     switch (attrName) {
       case "strength":
-        setAttributes({ ...attributes, strength: attributes["strength"] + 1 });
-        if (attributes["strength"] > 10) {
-          const over = attributes["strength"] - 10;
-          const point = over / 2;
+        const value =
+          direction == "up"
+            ? attributes["strength"] + 1
+            : attributes["strength"] - 1;
+        setAttributes({ ...attributes, strength: value });
+        console.log("attributes[strength]: ", value);
+        if (value > 10) {
+          const over = value - 10;
+          const point = over % 2 == 0 ? over / 2 : 0;
+          console.log("got here");
+          console.log(point);
           setModifiers({ ...modifiers, strenght: point });
+
+          console.log("modifier inside", modifiers);
         }
+        console.log("modifier", modifiers);
         break;
       case "dexterity":
+        const dexterity =
+          direction == "up"
+            ? attributes["dexterity"] + 1
+            : attributes["dexterity"] - 1;
         setAttributes({
           ...attributes,
-          dexterity: attributes["dexterity"] + 1,
+          dexterity: dexterity,
         });
         break;
       case "constitution":
+        const newConstitution =
+          direction == "up"
+            ? attributes["constitution"] + 1
+            : attributes["constitution"] - 1;
         setAttributes({
           ...attributes,
-          constitution: attributes["constitution"] + 1,
+          constitution: newConstitution,
         });
         break;
       case "intelligence":
+        const newIntelligence =
+          direction == "up"
+            ? attributes["intelligence"] + 1
+            : attributes["intelligence"] - 1;
         setAttributes({
           ...attributes,
-          intelligence: attributes["intelligence"] + 1,
+          intelligence: newConstitution,
         });
         break;
       case "wisdom":
-        setAttributes({ ...attributes, wisdom: attributes["wisdom"] + 1 });
+        const newWisdom =
+          direction == "up"
+            ? attributes["wisdom"] + 1
+            : attributes["wisdom"] - 1;
+        setAttributes({ ...attributes, wisdom: newWisdom });
         break;
       case "charisma":
-        setAttributes({ ...attributes, charisma: attributes["charisma"] + 1 });
-        break;
-
-      default:
-        break;
-    }
-  };
-
-  const handleAttributesMinus = (attrName) => {
-    switch (attrName) {
-      case "strength":
-        setAttributes({ ...attributes, strength: attributes["strength"] - 1 });
-        break;
-      case "dexterity":
-        setAttributes({
-          ...attributes,
-          dexterity: attributes["dexterity"] - 1,
-        });
-        break;
-      case "constitution":
-        setAttributes({
-          ...attributes,
-          constitution: attributes["constitution"] - 1,
-        });
-        break;
-      case "intelligence":
-        setAttributes({
-          ...attributes,
-          intelligence: attributes["intelligence"] - 1,
-        });
-        break;
-      case "wisdom":
-        setAttributes({ ...attributes, wisdom: attributes["wisdom"] - 1 });
-        break;
-      case "charisma":
-        setAttributes({ ...attributes, charisma: attributes["charisma"] - 1 });
+        const newCharisma =
+          direction == "up"
+            ? attributes["charisma"] + 1
+            : attributes["charisma"] - 1;
+        setAttributes({ ...attributes, charisma: newCharisma });
         break;
 
       default:
@@ -117,45 +112,55 @@ function App() {
             <h2>Attributes</h2>
             <div>
               Strength: {attributes.strength}(Modifier: {modifiers["strength"]})
-              <button onClick={() => handleAttributes("strength")}>+</button>
-              <button onClick={() => handleAttributesMinus("strength")}>
+              <button onClick={() => handleAttributes("strength", "up")}>
+                +
+              </button>
+              <button onClick={() => handleAttributes("strength", "down")}>
                 -
               </button>
             </div>
             <div>
               Dexterity: {attributes.dexterity}
-              <button onClick={() => handleAttributes("dexterity")}>+</button>
-              <button onClick={() => handleAttributesMinus("dexterity")}>
+              <button onClick={() => handleAttributes("dexterity", "up")}>
+                +
+              </button>
+              <button onClick={() => handleAttributes("dexterity", "down")}>
                 -
               </button>
             </div>
             <div>
               Constitution: {attributes.constitution}
-              <button onClick={() => handleAttributes("constitution")}>
+              <button onClick={() => handleAttributes("constitution", "up")}>
                 +
               </button>
-              <button onClick={() => handleAttributesMinus("constitution")}>
+              <button onClick={() => handleAttributes("constitution", "down")}>
                 -
               </button>
             </div>
             <div>
               Intelligence: {attributes.intelligence}
-              <button onClick={() => handleAttributes("intelligence")}>
+              <button onClick={() => handleAttributes("intelligence", "up")}>
                 +
               </button>
-              <button onClick={() => handleAttributesMinus("intelligence")}>
+              <button onClick={() => handleAttributes("intelligence", "down")}>
                 -
               </button>
             </div>
             <div>
               Wisdom: {attributes.wisdom}
-              <button onClick={() => handleAttributes("wisdom")}>+</button>
-              <button onClick={() => handleAttributesMinus("wisdom")}>-</button>
+              <button onClick={() => handleAttributes("wisdom", "up")}>
+                +
+              </button>
+              <button onClick={() => handleAttributes("wisdom", "down")}>
+                -
+              </button>
             </div>
             <div>
               Charisma: {attributes.charisma}
-              <button onClick={() => handleAttributes("charisma")}>+</button>
-              <button onClick={() => handleAttributesMinus("charisma")}>
+              <button onClick={() => handleAttributes("charisma", "up")}>
+                +
+              </button>
+              <button onClick={() => handleAttributes("charisma", "down")}>
                 -
               </button>
             </div>
