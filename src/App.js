@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "./App.css";
 import { ATTRIBUTE_LIST, CLASS_LIST, SKILL_LIST } from "./consts.js";
+import { useEffect } from "react";
 
 function App() {
   const defaultValues = {
@@ -18,20 +19,46 @@ function App() {
 
   const [attributes, setAttributes] = useState(defaultValues);
   const [modifiers, setModifiers] = useState({});
+  const [metRequirement, setMetRequirement] = useState(new Set());
+
+  const handleMeetRequirement = () => {
+    let result = [];
+    const list = new Set();
+
+    for (const key in CLASS_LIST) {
+      Object.keys(CLASS_LIST[key]).forEach((attr) => {
+        if (CLASS_LIST[key][attr] <= attributes[attr.toLocaleLowerCase()]) {
+          result.push(true);
+        } else {
+          result.push(false);
+        }
+      });
+
+      if (result.includes(false)) {
+        list.delete(key);
+        setMetRequirement(list);
+      } else {
+        list.add(key);
+        setMetRequirement(list);
+      }
+      result = [];
+    }
+  };
 
   const handleAttributes = (attrName, direction) => {
     switch (attrName) {
       case "strength":
         const value =
-          direction == "up"
+          direction === "up"
             ? attributes["strength"] + 1
             : attributes["strength"] - 1;
         setAttributes({ ...attributes, strength: value });
         setModifiers({ ...modifiers, strenght: getPoints(value) });
+        handleMeetRequirement();
         break;
       case "dexterity":
         const dexterity =
-          direction == "up"
+          direction === "up"
             ? attributes["dexterity"] + 1
             : attributes["dexterity"] - 1;
         setAttributes({
@@ -39,10 +66,11 @@ function App() {
           dexterity: dexterity,
         });
         setModifiers({ ...modifiers, dexterity: getPoints(dexterity) });
+        handleMeetRequirement();
         break;
       case "constitution":
         const newConstitution =
-          direction == "up"
+          direction === "up"
             ? attributes["constitution"] + 1
             : attributes["constitution"] - 1;
         setAttributes({
@@ -53,10 +81,11 @@ function App() {
           ...modifiers,
           constitution: getPoints(newConstitution),
         });
+        handleMeetRequirement();
         break;
       case "intelligence":
         const newIntelligence =
-          direction == "up"
+          direction === "up"
             ? attributes["intelligence"] + 1
             : attributes["intelligence"] - 1;
         setAttributes({
@@ -67,22 +96,25 @@ function App() {
           ...modifiers,
           intelligence: getPoints(newIntelligence),
         });
+        handleMeetRequirement();
         break;
       case "wisdom":
         const newWisdom =
-          direction == "up"
+          direction === "up"
             ? attributes["wisdom"] + 1
             : attributes["wisdom"] - 1;
         setAttributes({ ...attributes, wisdom: newWisdom });
         setModifiers({ ...modifiers, wisdom: getPoints(newWisdom) });
+        handleMeetRequirement();
         break;
       case "charisma":
         const newCharisma =
-          direction == "up"
+          direction === "up"
             ? attributes["charisma"] + 1
             : attributes["charisma"] - 1;
         setAttributes({ ...attributes, charisma: newCharisma });
         setModifiers({ ...modifiers, charisma: getPoints(newCharisma) });
+        handleMeetRequirement();
         break;
 
       default:
@@ -187,8 +219,15 @@ function App() {
           <div id="item2">
             <h2>Classes</h2>
             {Object.keys(CLASS_LIST).map((cl, i) => {
+              const color = metRequirement.has(cl)
+                ? "met_requirment"
+                : "disable";
               return (
-                <span key={i} onClick={() => showRequiredStat(cl)}>
+                <span
+                  key={i}
+                  onClick={() => showRequiredStat(cl)}
+                  className={color}
+                >
                   {cl}
                   <br />
                 </span>

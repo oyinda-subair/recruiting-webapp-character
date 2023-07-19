@@ -41,3 +41,11 @@ code {
 .requirement_view {
   padding-top: 10px;
 }
+
+.met_requirment {
+  color: red;
+}
+
+.disable {
+  pointer-events: none;
+}
